@@ -46,27 +46,6 @@ body {
   z-index: 0;
 }
 
-.music {
-  position: fixed;
-  top: 25px;
-  right: 25px;
-  z-index: 10;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(201,173,118,.35);
-  border-radius: 50%;
-  color: var(--gold);
-  background: rgba(8,9,13,.6);
-  cursor: pointer;
-  font-size: 17px;
-  transition: .3s;
-}
-
-.music:hover {
-  background: rgba(201,173,118,.12);
-  transform: scale(1.06);
-}
-
 .experience {
   position: relative;
   z-index: 1;
@@ -245,7 +224,6 @@ h1, h2, .serif {
 @media(max-width: 600px) {
   .scene { padding: 65px 25px; }
   .letter { font-size: 19px; }
-  .music { top: 15px; right: 15px; }
   .eyebrow { letter-spacing: 3px; }
 }
 </style>
@@ -255,8 +233,7 @@ h1, h2, .serif {
 
 <canvas id="particles"></canvas>
 
-<button class="music" id="musicButton" aria-label="Toggle music">♫</button>
-
+<!-- BACKGROUND SOUNDTRACK -->
 <audio id="bgMusic" preload="auto" loop playsinline>
   <source src="assets/arrivalofthebirds.mp3" type="audio/mpeg">
 </audio>
@@ -348,10 +325,10 @@ h1, h2, .serif {
 
 <script>
 let current = 0;
+
 const scenes = document.querySelectorAll('.scene');
 const dots = document.querySelectorAll('.dot');
 const music = document.getElementById('bgMusic');
-const musicButton = document.getElementById('musicButton');
 
 music.volume = 0.48;
 
@@ -365,11 +342,11 @@ function showScene(index) {
   });
 }
 
+// Music begins on the first user interaction.
+// This is required by Safari and most modern browsers.
 function begin() {
-  music.play().then(() => {
-    musicButton.style.opacity = '1';
-  }).catch(() => {
-    musicButton.title = 'Tap the music note to start the soundtrack';
+  music.play().catch(error => {
+    console.log("Music playback could not start:", error);
   });
 
   showScene(1);
@@ -384,24 +361,6 @@ function next() {
 function restart() {
   showScene(0);
 }
-
-musicButton.addEventListener('click', () => {
-  if (music.paused) {
-    music.play().catch(() => {});
-  } else {
-    music.pause();
-  }
-});
-
-music.addEventListener('play', () => {
-  musicButton.style.opacity = '1';
-  musicButton.textContent = '♫';
-});
-
-music.addEventListener('pause', () => {
-  musicButton.style.opacity = '.5';
-  musicButton.textContent = '♪';
-});
 
 // Floating golden particles
 const canvas = document.getElementById('particles');
